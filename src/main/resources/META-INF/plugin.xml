@@ -1,11 +1,11 @@
 <idea-plugin>
     <id>com.samujjwaal.DesignPatternPlugin</id>
-    <name>Plugin display name here</name>
-    <vendor email="support@yourcompany.com" url="http://www.yourcompany.com">YourCompany</vendor>
+    <name>Design Pattern Generator</name>
+    <vendor email="sdey9@uic.edu" url="http://sdey9.people.uic.edu">Samujjwaal Dey</vendor>
 
     <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
+    Plugin to generate template code of Design patterns<br>
+    <em>Work in progress</em>
     ]]></description>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
@@ -18,5 +18,21 @@
 
     <actions>
         <!-- Add your actions here -->
+        
+        <action
+                id="test.plugin.editor"
+                class="com.samujjwaal.designpatternplugin.SearchStackOverflow"
+                text="Search on Stack Overflow"
+                description="Search on stack overflow">
+            <add-to-group group-id="EditorPopupMenu" anchor="last" />
+        </action>
+        <action
+                id="test.plugin.console"
+                class="com.samujjwaal.designpatternplugin.SearchStackOverflow"
+                text="Search on Stack Overflow"
+                description="Search on stack overflow">
+            <add-to-group group-id="ConsoleEditorPopupMenu" anchor="last" />
+        </action>
+
     </actions>
 </idea-plugin>
