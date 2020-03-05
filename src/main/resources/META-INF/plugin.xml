@@ -19,23 +19,15 @@
     <actions>
         <!-- Add your actions here -->
 
-        <action class="com.samujjwaal.designpatternplugin.OpenGitHub" id="GitHub.Actions.OpenProject"
-                text="Open GitHub Project"/>
-
-        <action
-                id="test.plugin.editor"
-                class="com.samujjwaal.designpatternplugin.SearchStackOverflow"
-                text="Search on Stack Overflow"
-                description="Search on stack overflow">
-            <add-to-group group-id="EditorPopupMenu" anchor="last" />
-        </action>
-        <action
-                id="test.plugin.console"
-                class="com.samujjwaal.designpatternplugin.SearchStackOverflow"
-                text="Search on Stack Overflow"
-                description="Search on stack overflow">
-            <add-to-group group-id="ConsoleEditorPopupMenu" anchor="last" />
-        </action>
+                <group id="DesignPattern.Generator.MainMenu" text="Design Pattern Generator"
+                       description="Design pattern generator">
+                    <add-to-group group-id="MainMenu" anchor="last"/>
+                    <action class="com.samujjwaal.designpatternplugin.GetUserInput" id="Get.User.Input"
+                            text="Choose Design Pattern" />
+                    <separator/>
+                    <action class="com.samujjwaal.designpatternplugin.OpenGitHub" id="GitHub.Actions.OpenProject"
+                            text="Open GitHub Project"/>
+                </group>
 
     </actions>
 </idea-plugin>
