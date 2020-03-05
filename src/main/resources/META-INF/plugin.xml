@@ -18,7 +18,10 @@
 
     <actions>
         <!-- Add your actions here -->
-        
+
+        <action class="com.samujjwaal.designpatternplugin.OpenGitHub" id="GitHub.Actions.OpenProject"
+                text="Open GitHub Project"/>
+
         <action
                 id="test.plugin.editor"
                 class="com.samujjwaal.designpatternplugin.SearchStackOverflow"
