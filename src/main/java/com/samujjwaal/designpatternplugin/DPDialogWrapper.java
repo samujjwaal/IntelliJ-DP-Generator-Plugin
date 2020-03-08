@@ -1,5 +1,6 @@
 package com.samujjwaal.designpatternplugin;
 
+import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.DialogWrapper;
 import com.intellij.ui.JBColor;
 import com.intellij.ui.components.JBLabel;
@@ -7,6 +8,7 @@ import com.intellij.uiDesigner.core.AbstractLayout;
 import com.intellij.util.ui.GridBag;
 import com.intellij.util.ui.JBUI;
 import com.intellij.util.ui.UIUtil;
+import com.samujjwaal.hw1ProjectFiles.DesignPattern;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -15,13 +17,13 @@ import java.awt.*;
 public class DPDialogWrapper extends DialogWrapper {
 
     private JPanel panel = new JPanel(new GridBagLayout());
-    private JTextField packageName = new JTextField("com.CreationalDP.prototype");
+    private JTextField packageName = new JTextField("com.CreationalDP.prototype") ;
     private JTextField[] classNames;
 
+    private DesignPattern designPatternSelected;
     private String[] defaultClassesNames = {"Prototype","ConcretePrototype","Client"};
 
-
-    public DPDialogWrapper() {
+    public DPDialogWrapper(DesignPattern dp,String[] defaultClasses, String defaultPackageName, AnActionEvent e) {
         super(true);  // use the current window as parent
         init();
         setTitle("Test DialogWrapper");
@@ -34,7 +36,6 @@ public class DPDialogWrapper extends DialogWrapper {
         for (int i = 0; i < defaultClassesNames.length ; i++ ){
             classNames[i] = new JTextField(defaultClassesNames[i]);
             classNames[i].setForeground(JBColor.gray);
-
         }
         GridBag gb = new GridBag()
                 .setDefaultInsets(JBUI.insets(0, 0, AbstractLayout.DEFAULT_VGAP,
@@ -50,14 +51,11 @@ public class DPDialogWrapper extends DialogWrapper {
         panel.add(label(""),gb.nextLine().next().weightx(0.1));
         panel.add(label("Enter Class Names:"),gb.nextLine().next().weightx(0.1));
         panel.add(label(""),gb.nextLine().next().weighty(0.1));
-
-
         return panel;
     }
 
     @Override
     protected void doOKAction() {
-
         dispose();
 
     }
