@@ -11,12 +11,13 @@ import javax.swing.*;
 public class GetUserInput extends AnAction {
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-        DPDialogWrapper dpWrapper = new DPDialogWrapper();
-        if(dpWrapper.showAndGet()){
-            dpWrapper.doOKAction();
-        }
+//        DPDialogWrapper dpWrapper = new DPDialogWrapper();
+//        if(dpWrapper.showAndGet()){
+//            dpWrapper.doOKAction();
+//        }
 //        AskDesignPattern(e);
-
+        ChooseDesignPattern c = new ChooseDesignPattern();
+        c.createDropdown();
 
 
     }
