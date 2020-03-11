@@ -17,9 +17,7 @@ public class GetUserInput extends AnAction {
 //        }
 //        AskDesignPattern(e);
         ChooseDesignPattern c = new ChooseDesignPattern();
-        c.createDropdown();
-
-
+        c.createDropdown(e);
     }
 
     private void AskDesignPattern(@NotNull AnActionEvent e) {
@@ -39,9 +37,5 @@ public class GetUserInput extends AnAction {
 
         Messages.showMessageDialog(e.getProject(), String.format("%s The Chosen Design Pattern Is %s",test,dpName),
                 "Design Pattern Generator", Messages.getInformationIcon());
-
-
-
-
     }
 }

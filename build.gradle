@@ -13,11 +13,23 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.6.0'
+
+    // https://mvnrepository.com/artifact/com.squareup/javapoet
+    compile group: 'com.squareup', name: 'javapoet', version: '1.12.1'
+    // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    // https://mvnrepository.com/artifact/com.typesafe/config
+    compile group: 'com.typesafe', name: 'config', version: '1.4.0'
+
+
+
 }
 
 // See https://github.com/JetBrains/gradle-intellij-plugin/
 intellij {
+    plugins 'java'
     version '2019.3.3'
 }
 patchPluginXml {
