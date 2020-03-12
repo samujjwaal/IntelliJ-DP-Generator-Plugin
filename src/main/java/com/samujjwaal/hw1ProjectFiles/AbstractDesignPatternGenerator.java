@@ -2,7 +2,7 @@ package com.samujjwaal.hw1ProjectFiles;
 
 import java.io.IOException;
 
-abstract class DesignPatternGenerator {
+abstract class AbstractDesignPatternGenerator {
 
     protected  String[] designPatterns = {"Singleton","Abstract Factory","Builder","Factory Method","Prototype",
             "Adapter","Bridge","Composite","Decorator","Facade","Flyweight","Proxy",

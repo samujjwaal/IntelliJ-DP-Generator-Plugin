@@ -1,5 +1,6 @@
 package com.samujjwaal.designpatternplugin;
 
+import ch.qos.logback.classic.Logger;
 import com.intellij.lang.java.JavaLanguage;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -17,6 +18,7 @@ import com.intellij.util.ui.UIUtil;
 import com.samujjwaal.hw1ProjectFiles.DesignPattern;
 import com.squareup.javapoet.JavaFile;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,22 +29,30 @@ import java.util.Objects;
 
 public class DPDialogWrapper extends DialogWrapper {
 
+    //Define a static logger variable so that it references the Logger instance
+    private static final Logger logger = (Logger) LoggerFactory.getLogger(DPDialogWrapper.class);
 
+    // event instance
     private AnActionEvent event;
 
+    // panel
     private JPanel panel = new JPanel(new GridBagLayout());
-    private JTextField packageName;
-    private JTextField[] classNames;
 
+    // text fields
+    private JTextField packageName;
+    private JTextField[] classNamesTextField;
+
+    // DesignPattern instance
     private DesignPattern designPatternSelected;
     private String[] defaultClassesNames;
 
     public void setParams(DesignPattern dp,String[] defaultClasses, String defaultPackageName, AnActionEvent e){
         int n = defaultClasses.length;
+
+        //initializing all fields
         event = e;
         packageName = new JTextField(defaultPackageName);
-        classNames = new JTextField[n];
-
+        classNamesTextField = new JTextField[n];
 
         designPatternSelected = dp;
         defaultClassesNames = defaultClasses;
@@ -61,39 +71,46 @@ public class DPDialogWrapper extends DialogWrapper {
     protected JComponent createCenterPanel() {
         packageName.setForeground(JBColor.darkGray);
 
+        //setting default values to text fields
         for (int i = 0; i < defaultClassesNames.length ; i++ ){
-            classNames[i] = new JTextField(defaultClassesNames[i]);
-            classNames[i].setForeground(JBColor.gray);
+            classNamesTextField[i] = new JTextField(defaultClassesNames[i]);
+            classNamesTextField[i].setForeground(JBColor.gray);
 
+            // when user interacts with the text field
             int finalI = i;
-            classNames[i].addFocusListener(new FocusListener() {
+            classNamesTextField[i].addFocusListener(new FocusListener() {
                 @Override
                 public void focusGained(FocusEvent e) {
-                    classNames[finalI].setForeground(JBColor.BLACK);
-                    classNames[finalI].setText("");
-
+                    classNamesTextField[finalI].setForeground(JBColor.BLACK);
+                    classNamesTextField[finalI].setText("");
                 }
                 @Override
                 public void focusLost(FocusEvent e) {
                 }
             });
         }
+
+        // gridbag layout object
         GridBag gb = new GridBag()
                 .setDefaultInsets(JBUI.insets(0, 0, AbstractLayout.DEFAULT_VGAP,
                         AbstractLayout.DEFAULT_HGAP))
                 .setDefaultWeightX(1.0)
                 .setDefaultFill(GridBagConstraints.HORIZONTAL);
 
-        panel.setSize(new Dimension(450,classNames.length*50));
+//        set panel size
+        panel.setSize(new Dimension(450, classNamesTextField.length * 50));
 
-
+//      add text fields
         panel.add(label("Enter Package Name:"),gb.nextLine().next().weightx(0.1));
         panel.add(packageName,gb.next().weightx(0.2));
+
         panel.add(label(""),gb.nextLine().next().weightx(0.1));
+
         panel.add(label("Enter Class Names:"),gb.nextLine().next().weightx(0.1));
         panel.add(label(""),gb.nextLine().next().weighty(0.1));
 
-        for (JTextField className : classNames){
+//        text fields for all class names
+        for (JTextField className : classNamesTextField){
             panel.add(label(String.format("For %s:", className.getText() )),gb.nextLine().next().weightx(0.1));
             panel.add(className,gb.next().weightx(1));
         }
@@ -102,29 +119,41 @@ public class DPDialogWrapper extends DialogWrapper {
 
     @Override
     protected void doOKAction() {
+
+        // retrieving user input
         String pckName = packageName.getText();
-        String[] classname = new String[classNames.length];
-        for (int i = 0; i < classNames.length; i++) {
-            classname[i] = classNames[i].getText();
+        String[] inputClassname = new String[classNamesTextField.length];
+        for (int i = 0; i < classNamesTextField.length; i++) {
+            inputClassname[i] = classNamesTextField[i].getText();
         }
 
+        // to close panel
         dispose();
 
-        JavaFile[] files = designPatternSelected.generateCode(classname,pckName);
+        // generating JavaFile of each design pattern class
+        logger.info("Generating java code using JavaPoet");
+        JavaFile[] files = designPatternSelected.generateCode(inputClassname,pckName);
+
         PsiFile[] writeFiles = new PsiFile[files.length];
 
+        logger.info("Writing java code into output files");
         WriteCommandAction.runWriteCommandAction(event.getProject(), new Runnable() {
             @Override
             public void run() {
                 try {
+                    // creating output directory
                     PsiDirectory outputDir = PsiManager.getInstance(Objects.requireNonNull(event.getProject())).findDirectory(event.getProject().getBaseDir().createChildDirectory(null,pckName));
                     for (int i = 0; i < files.length; i++) {
-                        writeFiles[i] = PsiFileFactory.getInstance(Objects.requireNonNull(event.getProject())).createFileFromText(String.format("%s.java", classname[i]), JavaLanguage.INSTANCE, files[i].toString());
+
+                        // create PsiFile of each generated java file
+                        writeFiles[i] = PsiFileFactory.getInstance(Objects.requireNonNull(event.getProject())).createFileFromText(String.format("%s.java", inputClassname[i]), JavaLanguage.INSTANCE, files[i].toString());
                         int finalI = i;
                         WriteCommandAction.runWriteCommandAction(event.getProject(), new Runnable() {
                             @Override
                             public void run() {
                                 assert outputDir != null;
+
+                                // adding PsiFile to output directory
                                 outputDir.add(writeFiles[finalI]);
                             }
                         });
@@ -134,8 +163,6 @@ public class DPDialogWrapper extends DialogWrapper {
                 }
             }
         });
-
-
     }
 
     @Override
@@ -144,6 +171,7 @@ public class DPDialogWrapper extends DialogWrapper {
     }
 
     private JComponent label (String text){
+        // custom label properties
         JBLabel label = new JBLabel(text);
         label.setComponentStyle(UIUtil.ComponentStyle.SMALL);
         label.setFontColor(UIUtil.FontColor.BRIGHTER);

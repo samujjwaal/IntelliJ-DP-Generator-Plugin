@@ -1,41 +1,25 @@
 package com.samujjwaal.designpatternplugin;
 
+import ch.qos.logback.classic.Logger;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.ui.ComboBox;
-import com.intellij.openapi.ui.Messages;
 import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
+import org.slf4j.LoggerFactory;
 
 public class GetUserInput extends AnAction {
+    //Define a static logger variable so that it references the Logger instance
+    private static final Logger logger = (Logger) LoggerFactory.getLogger(GetUserInput.class);
+
     @Override
     public void actionPerformed(@NotNull AnActionEvent e) {
-//        DPDialogWrapper dpWrapper = new DPDialogWrapper();
-//        if(dpWrapper.showAndGet()){
-//            dpWrapper.doOKAction();
-//        }
-//        AskDesignPattern(e);
+        logger.info("Entering {} ",GetUserInput.class.getSimpleName());
+
+        logger.info("Executing actionPerformed()");
+
+        logger.info("Creating instance of {}", ChooseDesignPattern.class.getSimpleName());
         ChooseDesignPattern c = new ChooseDesignPattern();
         c.createDropdown(e);
-    }
 
-    private void AskDesignPattern(@NotNull AnActionEvent e) {
-        String[] designPatterns = {"Singleton","Abstract Factory","Builder","Factory Method","Prototype",
-                "Adapter","Bridge","Composite","Decorator","Facade","Flyweight","Proxy",
-                "Chain of Responsibility","Command","Interpreter","Iterator","Mediator","Memento","Observer","State","Strategy","Visitor","Template Method"};
-
-        ComboBox<String> dropdown = new ComboBox<>(designPatterns);
-        JPanel panel = new JPanel();
-        panel.add(dropdown);
-
-        String dpName = Messages.showInputDialog(e.getProject(),"Enter Design Pattern Name",
-                "Design Pattern Generator",Messages.getQuestionIcon());
-
-        String test = Messages.showInputDialog(e.getProject(),"Enter some text",
-                "Test",Messages.getQuestionIcon());
-
-        Messages.showMessageDialog(e.getProject(), String.format("%s The Chosen Design Pattern Is %s",test,dpName),
-                "Design Pattern Generator", Messages.getInformationIcon());
+        logger.info("End of execution");
     }
 }

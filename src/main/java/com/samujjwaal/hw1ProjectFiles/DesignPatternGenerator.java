@@ -10,22 +10,22 @@ import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Hw1DesignPatternGenerator extends AbstractDesignPatternGenerator {
+public class DesignPatternGenerator extends AbstractDesignPatternGenerator {
 
     //Define a static logger variable so that it references the Logger instance
-    private static final Logger logger = (Logger) LoggerFactory.getLogger(Hw1DesignPatternGenerator.class);
+    private static final Logger logger = (Logger) LoggerFactory.getLogger(DesignPatternGenerator.class);
 
-    private static Hw1DesignPatternGenerator instance;
+    private static DesignPatternGenerator instance;
 
-    private Hw1DesignPatternGenerator(){
-        logger.info("Executing constructor Hw1DesignPatternGenerator()");
+    private DesignPatternGenerator(){
+        logger.info("Executing constructor DesignPatternGenerator()");
     }
 
-    public static Hw1DesignPatternGenerator getInstance(){
-        logger.info("Creating instance of {}",Hw1DesignPatternGenerator.class.getSimpleName());
+    public static DesignPatternGenerator getInstance(){
+        logger.info("Creating instance of {}", DesignPatternGenerator.class.getSimpleName());
 
         if (instance == null) {
-            instance = new Hw1DesignPatternGenerator();
+            instance = new DesignPatternGenerator();
         }
         return instance;
     }

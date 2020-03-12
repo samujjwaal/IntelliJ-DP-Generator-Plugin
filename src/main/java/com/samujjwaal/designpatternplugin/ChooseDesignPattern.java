@@ -1,10 +1,12 @@
 package com.samujjwaal.designpatternplugin;
 
+import ch.qos.logback.classic.Logger;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.JBColor;
 import com.samujjwaal.hw1ProjectFiles.DesignPattern;
-import com.samujjwaal.hw1ProjectFiles.Hw1DesignPatternGenerator;
+import com.samujjwaal.hw1ProjectFiles.DesignPatternGenerator;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +21,8 @@ import java.util.Objects;
 
 public class ChooseDesignPattern extends JFrame implements ItemListener{
 
-
+    //Define a static logger variable so that it references the Logger instance
+    private static final Logger logger = (Logger) LoggerFactory.getLogger(ChooseDesignPattern.class);
 
     // frame
     static JFrame f;
@@ -30,8 +33,10 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
     // combobox
     static ComboBox<String> dropdown;
 
+    // panel
     static JPanel p;
 
+    // Buttons for the frame
     static JButton proceedButton;
     static JButton cancelButton;
 
@@ -40,17 +45,25 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
             "Adapter","Bridge","Composite","Decorator","Facade","Flyweight","Proxy",
             "Chain of Responsibility","Command","Interpreter","Iterator","Mediator","Memento","Observer","State","Strategy","Visitor","Template Method"};
 
+//    declare HashMap object
     static HashMap<Integer, String> designPatternsHashMap = new HashMap<Integer, String>();
 
     private void createHashMap(String[] patternList){
+        logger.info("Creating hashmap of design patterns");
+
         HashMap<Integer, String> dpHashMap = new HashMap<Integer, String>();
         for(int i =0; i<patternList.length; i++){
+
+            //removing spaces and converting to lower case
             String value = patternList[i].replaceAll("\\s+","").toLowerCase();
             designPatternsHashMap.put(i + 1, value );
         }
     }
 
     private int getDesignPatternKey(String value){
+        logger.info("Retrieve design pattern choice from hashmap ");
+
+        // By default, returns singleton as choice
         int key = 1;
         for(Map.Entry entry: designPatternsHashMap.entrySet()){
             String a = (String) entry.getValue();
@@ -62,7 +75,7 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
         return key;
     }
 
-    String choice = designPatterns[0].replaceAll("\\s+","").toLowerCase() ;
+//    String choice = designPatterns[0].replaceAll("\\s+","").toLowerCase() ;
 
     public void createDropdown(AnActionEvent event){
 
@@ -80,7 +93,7 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
 
         dropdown.addItemListener(dp);
 
-        //create hash map of design patterns
+        // create hash map of design patterns
         createHashMap(designPatterns);
 
         // create labels
@@ -103,16 +116,27 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
         f.add(p);
 
         proceedButton = new JButton("Proceed");
+
+        // action for Proceed button
         proceedButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 f.dispose();
-                Hw1DesignPatternGenerator hw2 = Hw1DesignPatternGenerator.getInstance();
+
+                logger.info("Creating instance of {}", DesignPatternGenerator.class.getSimpleName());
+                DesignPatternGenerator hw2 = DesignPatternGenerator.getInstance();
                 try {
+                    // Get choice from dropdown
                     String choice = Objects.requireNonNull(dropdown.getSelectedItem()).toString().replaceAll("\\s+","").toLowerCase();
                     int designPatternChoice = getDesignPatternKey(choice);
                     DesignPattern outputDesignPattern = hw2.chooseDesignPattern(designPatternChoice,0);
-                    DPDialogWrapper dpWrapper = new DPDialogWrapper(outputDesignPattern,outputDesignPattern.getDefaultClassName(),outputDesignPattern.getDefaultPackageName(),event);
+
+                    String[] classNames = outputDesignPattern.getDefaultClassName();
+                    String packageName = outputDesignPattern.getDefaultPackageName();
+
+                    logger.info("Creating object of {}", DPDialogWrapper.class.getSimpleName());
+                    DPDialogWrapper dpWrapper = new DPDialogWrapper(outputDesignPattern,classNames,packageName,event);
+                    
                     if(dpWrapper.showAndGet()){
                         dpWrapper.doOKAction();
                     }
@@ -139,8 +163,10 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
         // center the frame
         f.setLocationRelativeTo(null);
 
+        //To display the frame
         f.setVisible(true);
 
+        //Action on closing frame
         f.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
     }
@@ -151,6 +177,7 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
         if (e.getSource() == dropdown) {
             String choice;
             choice = Objects.requireNonNull(dropdown.getSelectedItem()).toString();
+            logger.info("{} design pattern chosen",choice);
             l1.setText(choice + " selected");
             l1.setForeground(JBColor.black);
         }
