@@ -1,7 +1,7 @@
 package com.samujjwaal.hw1ProjectFiles;
 
 import com.squareup.javapoet.JavaFile;
-import ch.qos.logback.classic.Logger;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +10,7 @@ import java.util.Scanner;
 public interface DesignPattern {
 
     //Define a static logger variable so that it references the Logger instance
-    Logger logger = (Logger) LoggerFactory.getLogger(DesignPattern.class);
+    Logger logger = LoggerFactory.getLogger(DesignPattern.class);
 
     // to display all available design pattern that can be generated
     default void displayClassNames(String[] classes){

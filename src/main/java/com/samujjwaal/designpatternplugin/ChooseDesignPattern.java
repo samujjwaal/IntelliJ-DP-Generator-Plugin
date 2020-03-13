@@ -1,11 +1,11 @@
 package com.samujjwaal.designpatternplugin;
 
-import ch.qos.logback.classic.Logger;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.JBColor;
 import com.samujjwaal.hw1ProjectFiles.DesignPattern;
 import com.samujjwaal.hw1ProjectFiles.DesignPatternGenerator;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
@@ -19,10 +19,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
+
 public class ChooseDesignPattern extends JFrame implements ItemListener{
 
     //Define a static logger variable so that it references the Logger instance
-    private static final Logger logger = (Logger) LoggerFactory.getLogger(ChooseDesignPattern.class);
+    private static final Logger logger = LoggerFactory.getLogger(ChooseDesignPattern.class);
 
     // frame
     static JFrame f;

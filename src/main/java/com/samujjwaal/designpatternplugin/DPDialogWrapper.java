@@ -1,6 +1,6 @@
 package com.samujjwaal.designpatternplugin;
 
-import ch.qos.logback.classic.Logger;
+
 import com.intellij.lang.java.JavaLanguage;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -18,6 +18,7 @@ import com.intellij.util.ui.UIUtil;
 import com.samujjwaal.hw1ProjectFiles.DesignPattern;
 import com.squareup.javapoet.JavaFile;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
@@ -30,7 +31,7 @@ import java.util.Objects;
 public class DPDialogWrapper extends DialogWrapper {
 
     //Define a static logger variable so that it references the Logger instance
-    private static final Logger logger = (Logger) LoggerFactory.getLogger(DPDialogWrapper.class);
+    private static final Logger logger =  LoggerFactory.getLogger(DPDialogWrapper.class);
 
     // event instance
     private AnActionEvent event;

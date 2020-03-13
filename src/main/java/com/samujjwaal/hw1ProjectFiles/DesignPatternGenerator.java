@@ -3,7 +3,7 @@ package com.samujjwaal.hw1ProjectFiles;
 import com.samujjwaal.hw1ProjectFiles.behavioral.*;
 import com.samujjwaal.hw1ProjectFiles.creational.*;
 import com.samujjwaal.hw1ProjectFiles.structural.*;
-import ch.qos.logback.classic.Logger;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class DesignPatternGenerator extends AbstractDesignPatternGenerator {
 
     //Define a static logger variable so that it references the Logger instance
-    private static final Logger logger = (Logger) LoggerFactory.getLogger(DesignPatternGenerator.class);
+    private static final Logger logger = LoggerFactory.getLogger(DesignPatternGenerator.class);
 
     private static DesignPatternGenerator instance;
 

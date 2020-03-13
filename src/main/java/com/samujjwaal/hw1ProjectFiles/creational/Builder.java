@@ -1,17 +1,17 @@
 package com.samujjwaal.hw1ProjectFiles.creational;
 
+import com.samujjwaal.hw1ProjectFiles.DesignPattern;
 import com.squareup.javapoet.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.lang.model.element.Modifier;
 import java.io.IOException;
-import com.samujjwaal.hw1ProjectFiles.DesignPattern;
-import ch.qos.logback.classic.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public class Builder implements DesignPattern {
 
     //Define a static logger variable so that it references the Logger instance
-    private static final Logger logger = (Logger) LoggerFactory.getLogger(Builder.class);
+    private static final Logger logger = LoggerFactory.getLogger(Builder.class);
 
     public String[] defaultClasses = {"Builder", "Director","Product","concreteBuilder"};
     public String packageName = "com.CreationalDP.builder";

@@ -1,8 +1,8 @@
 package com.samujjwaal.hw1ProjectFiles.behavioral;
 
-import ch.qos.logback.classic.Logger;
 import com.samujjwaal.hw1ProjectFiles.DesignPattern;
 import com.squareup.javapoet.*;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.lang.model.element.Modifier;
@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class Command implements DesignPattern {
     //Define a static logger variable so that it references the Logger instance
-    private static final Logger logger = (Logger) LoggerFactory.getLogger(Command.class);
+    private static final Logger logger = LoggerFactory.getLogger(Command.class);
 
 
     public String[] defaultClasses = {"Command", "Invoker","Receiver","ConcreteCommand"};

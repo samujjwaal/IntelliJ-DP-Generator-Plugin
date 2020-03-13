@@ -1,17 +1,20 @@
 package com.samujjwaal.hw1ProjectFiles.structural;
 
-import com.squareup.javapoet.*;
+import com.samujjwaal.hw1ProjectFiles.DesignPattern;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.TypeSpec;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.lang.model.element.Modifier;
 import java.io.IOException;
-import com.samujjwaal.hw1ProjectFiles.DesignPattern;
-import ch.qos.logback.classic.Logger;
-import org.slf4j.LoggerFactory;
 
 public class Adapter implements DesignPattern {
 
     //Define a static logger variable so that it references the Logger instance
-    private static final Logger logger = (Logger) LoggerFactory.getLogger(Adapter.class);
+    private static final Logger logger =  LoggerFactory.getLogger(Adapter.class);
 
 
     public String[] defaultClasses = {"Target", "Adaptee","Adapter"};

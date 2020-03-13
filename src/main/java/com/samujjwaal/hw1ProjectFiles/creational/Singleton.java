@@ -1,17 +1,16 @@
 package com.samujjwaal.hw1ProjectFiles.creational;
 
-import ch.qos.logback.classic.Logger;
 import com.samujjwaal.hw1ProjectFiles.DesignPattern;
 import com.squareup.javapoet.*;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.lang.model.element.Modifier;
 import java.io.IOException;
 
 public class Singleton implements DesignPattern {
 
     //Define a static logger variable so that it references the Logger instance
-    private static final Logger logger = (Logger) LoggerFactory.getLogger(Singleton.class);
+    private static final Logger logger = LoggerFactory.getLogger(Singleton.class);
 
     public String[] defaultClasses = {"Singleton"};
     public String packageName = "com.CreationalDP.singleton";

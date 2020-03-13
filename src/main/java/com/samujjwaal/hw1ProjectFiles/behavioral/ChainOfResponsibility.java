@@ -1,11 +1,15 @@
 package com.samujjwaal.hw1ProjectFiles.behavioral;
 
+import com.samujjwaal.hw1ProjectFiles.DesignPattern;
 import com.squareup.javapoet.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import javax.lang.model.element.Modifier;
 import java.io.IOException;
-import com.samujjwaal.hw1ProjectFiles.DesignPattern;
 
 public class ChainOfResponsibility implements DesignPattern {
+
+    private static final Logger logger = LoggerFactory.getLogger(ChainOfResponsibility.class);
 
     public String[] defaultClasses = {"Handler", "ConcreteHandler1","ConcreteHandler2"};
     public String packageName = "com.BehavioralDP.chainOfResponsibility";
@@ -29,7 +33,7 @@ public class ChainOfResponsibility implements DesignPattern {
     }
 
     public JavaFile[] generateCode(String[] classes, String packageName){
-
+        logger.info("Executing generateCode()");
         int i = 0;
 
 //        Handler class declaration
@@ -106,6 +110,8 @@ public class ChainOfResponsibility implements DesignPattern {
         generatedCode[i] = JavaFile.builder(packageName,concHandler2)
                 .skipJavaLangImports(true)
                 .build();
+
+        logger.info("Returning generated java code to be written in files");
 
         return generatedCode;
 
