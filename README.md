@@ -1,64 +1,307 @@
-# Homework 2
-### Description: object-oriented design and implementation of an IntelliJ plugin with the design pattern code generator from homework 1.
-### Grade: 8% + bonus up to 3% for creating an additional plugin for Eclipse.
-#### You can obtain this Git repo using the command git clone git@bitbucket.org:cs474_spring2020/homework2.git.
+## Object-oriented design and implementation of an IntelliJ plugin for a Design Pattern Code Generator.
 
-## Preliminaries
-As part of the first homework assignment you gained experience with creating and managing your Git repository, you have learned many design patterns, you created your model and the object-oriented design of a design pattern code generator, you learned to create JUnit or Cucumber or FlatSpec tests, and you created your SBT or Gradle build scripts. Congratulations!
+This project is the implementation of a program to create an IntelliJ IDEA plugin  that generates the template code for a user chosen design pattern and adds it to the existing Java project opened and loaded in IntelliJ IDE. The Design Patterns covered are the 23 Gang of Four(GoF) design patterns, as presented in the book “Design Patterns: Elements of Reusable Object-Oriented Software”. 
 
-If you haven't already done so, please create create your account at [BitBucket](https://bitbucket.org/), a Git repo management system. It is imperative that you use your UIC email account that has the extension @uic.edu. Once you create an account with your UIC address, BibBucket will assign you an academic status that allows you to create private repos. Bitbucket users with free accounts cannot create private repos, which are essential for submitting your homeworks and the course project. If you have a problem with obtaining the academic account with your UIC.EDU email address, please contact Atlassian's license and billing team and ask them to enable your academic account by filling out the [Atlassian Bitbucket academic account request form](https://www.atlassian.com/software/views/bitbucket-academic-license).
+------
 
-If you have done your first homework, you can skip the rest of the prelimininaries. Your instructor created a team for this class named CS474_Spring2020. Please contact your TA, [Mr. Mohammed Siddiq](msiddi56@uic.edu) using your UIC.EDU email account and he will add you to the team repo as developers, since Mr.Siddiq already has the admin privileges. Please use your emails from the class registration roster to add you to the team and you will receive an invitation from BitBucket to join the team. Since it is a large class, please use your UIC email address for communications or Piazza and avoid emails from other accounts like funnybunny1998@gmail.com. If you don't receive a response within 24 hours, please contact us via Piazza, since it may be a case that your direct emails went to the spam folder.
+## Index
 
-Next, if you haven't done so, you will install [IntelliJ](https://www.jetbrains.com/student/) with your academic license, the JDK, the Scala runtime and the IntelliJ Scala plugin, the [Simple Build Toolkit (SBT)](https://www.scala-sbt.org/1.x/docs/index.html) or the [Gradle build tool](https://gradle.org/) and make sure that you can create, compile, and run Java and Scala programs. Please make sure that you can run [various Java tools from your chosen JDK](https://docs.oracle.com/en/java/javase/index.html).
+1. About Design Patterns
+2. About JavaPoet
+3. Application Design
+4. Test Cases
+5. Instructions to Execute
+6. Results of Execution
 
-Just to remind you, in this and all consecutive homeworks and in the course project you will use logging and configuration management frameworks. You will comment your code extensively and supply logging statements at different logging levels (e.g., TRACE, INFO, ERROR) to record information at some salient points in the executions of your programs. All input and configuration variables must be supplied through configuration files -- hardcoding these values in the source code is generally prohibited and will be punished by taking a large percentage of points from your total grade! You are expected to use [Logback](https://logback.qos.ch/) and [SLFL4J](https://www.slf4j.org/) for logging and [Typesafe Conguration Library](https://github.com/lightbend/config) for managing configuration files. These and other libraries should be imported into your project using your script [build.sbt](https://www.scala-sbt.org/1.0/docs/Basic-Def-Examples.html) or [gradle script](https://docs.gradle.org/current/userguide/writing_build_scripts.html). These libraries and frameworks are widely used in the industry, so learning them is the time well spent to improve your resumes.
+------
 
-## Functionality
-In this second homework, you will create an object-oriented design and implementation of a program that runs within an [Integrated Development Environments (IDEs)](https://en.wikipedia.org/wiki/Integrated_development_environment) to generate the code for a selected design pattern and adds this generated code to an open Java project. In that, this homework is based on the previous one and uses it as a module to provide needed functionality, i.e., a call to a method within this module to generate code for a design pattern returns an object of some type that contains the generated code. Hence, you will learn the benefit of a modular design and how IDEs can be extended.
+#### 1. About Design Patterns
 
-IDEs are extensible software applications that integrate multiple software development tools to support software engineers during the software development lifecycle to create, maintain and evolve software. Major IDEs like Intellij, Eclipse and Netbeans are extensible where software engineers can create additional tools called [plugins](https://en.wikipedia.org/wiki/Plug-in_(computing)) that can be added to IDEs without recompiling and linking the source code of the IDEs. Holistically, an IDE plugin is a package software component deployed often in a binary form with additional noncode artifacts (e.g., images, help documentation) that adheres to specific interfaces described in the IDE requirements documentation for plugins, so that a plugin can be used by the IDE via inversion control. Many companies and organizations have dedicated teams to extend the functionality of IDEs with plugins for specific needs (e.g., security or devops).
+Design patterns are the best practices that a programmer can employ to solve trivial problems while designing an application. Design patterns help in speeding up the development process as they provide a set of time tested, proven development paradigms. They provide an industry standard approach to solve a recurring problem. Using design patterns promotes reusability that leads to more robust and highly maintainable code.
 
-In this homework you will create a basic plugin for IntelliJ that will enable software engineers to generate code for a user-chosen design pattern and add it to the existing Java project opened and loaded in IntelliJ. In that, I repeat, this homework builds on the previous homework where you created a code generator for design patterns. Your plugin will activate a dockable window pane within IntelliJ that will present a selection of design patterns to the user who can choose a desired pattern to generate the code that will be added automatically to the existing open Java project.
+The 23 Design Patterns are classified into 3 main categories:
 
-You should start off by reading the [IntelliJ Plugin SDK documentation](https://www.jetbrains.org/intellij/sdk/docs/welcome.html) and practicing some basic examples to understand how to create, debug and deploy a plugin, which is an equivalent to a REPL "Hello World" application. Many tutorials exist for creating IntelliJ plugins - [Baeldung has a recent tutorial](https://www.baeldung.com/intellij-new-custom-plugin) and the [IntelliJ plugin SDK documentation](https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started.html) has a step-by-step description. There is a [website dedicated to plugin development](https://www.plugin-dev.com/intellij/) and IntelliJ has a [spreadsheet](https://docs.google.com/spreadsheets/d/1TYXZd68TbuSRYj-9qlP2TBH1fD2nbLK3OGMKKmBBFKs/edit?rm=full#gid=0) with hundreds of open-source plugin repo links. If you need visual guidance, you can find [visual tutorials on safaribooksonline or youtube](https://www.youtube.com/watch?v=fVos38m3CU4)
+* Creational Design Patterns
+  * Singleton
+  * Abstract  Factory
+  * Builder
+  * Factory Method
 
-As usual, this homework script is written using a retroscripting technique, in which the homework outlines are generally and loosely drawn, and the individual students improvise to create the implementation that fits their refined objectives. In doing so, students are expected to stay within the basic requirements of the homework and they are free to experiments. That is, it is impossible that two non-collaborating students will submit similar homeworks! Asking questions is important, **so please ask away on Piazza!**
+* Structural Design Patterns
+  * Adapter
+  * Bridge
+  * Composite
+  * Decorator
+  * Facade
+  * Flyweight
+  * Proxy
+* Behavioral Design Patterns
+  * Chain of Responsibility
+  * Command
+  * Interpreter
+  * Iterator
+  * Mediator
+  * Memento
+  * Observer
+  * State
+  * Strategy
+  * Template
+  * Visitor
 
-Your homework can be divided roughly into five steps. First, you learn the plugin organization and functionality, the structure of the plugin's project and how its constituent elements are organized. I suggest that you choose a basic plugin implementations for IntelliJ and explore its classes, interfaces, and dependencies; load this plugin code into IntelliJ, compile it, deploy it and run it. Once you complete the first step, you will understand how the IDE interacts with its plugins. Second, you create your own model that describes an abstract plugin structure and how you fit your design pattern generation code to operate within this structure. Next, you will create an implementation of your design where you will integrate your design pattern code generator into the plugin. Fourth, you will create multiple unit tests using [JUnit framework](https://junit.org/junit5/) or some other framework like [Cucumber](https://cucumber.io/). Finally, you will install your plugin in IntelliJ, run tests, run your plugin, generate the resulting pattern implementation in target languages added to some existing open Java project, and report the results. 
+------
 
-## Baseline
-To be considered for grading, your project should include at least one of your own written programs in Java (i.e., not copied examples where you renamed variables or refactored them similarly), your project should be buildable using the SBT or the Gradle, and your documentation must specify your chosen abstractions with links to specific modules where they are realized. Your documentation must include your design and model, the reasoning about pros and cons, explanations of your implementation and the chosen design patterns that you used to implement DePaCoG, and the results of your runs. Simply copying some open-source Java programs from examples and modifying them a bit (e.g., rename some variables) will result in desk-rejecting your submission.
+#### 2. About JavaPoet
 
-## Piazza collaboration
-You can post questions and replies, statements, comments, discussion, etc. on Piazza. For this homework, feel free to share your ideas, mistakes, code fragments, commands from scripts, and some of your technical solutions with the rest of the class, and you can ask and advise others using Piazza on where resources and sample programs can be found on the internet, how to resolve dependencies and configuration issues. When posting question and answers on Piazza, please select the appropriate folder, i.e., hw1 to ensure that all discussion threads can be easily located. Active participants and problem solvers will receive bonuses from the big brother :-) who is watching your exchanges on Piazza (i.e., your class instructor and your TA). However, *you must not describe your design or specific details related how your construct your models!*
+[JavaPoet](https://github.com/square/javapoet), a successor to [JavaWriter](https://github.com/square/javapoet/tree/javawriter_2), is a Java API for generating .java source files. It can generate primitive types, reference types (like classes, interfaces, enumerated types, anonymous inner classes), fields, methods, parameters, annotations, and Javadocs. 
 
-Since you can post your questions anonymously on pizza, there is no reason to be afraid to ask questions. Start working on this homework early and ask away! When you come to see your TA during his office hours don't ask him to debug your code - Mr.Siddiq **is prohibited** from doing so. You can discuss your design, abstractions, and show him your code to receive his feedback, but you should not ask him to solve problems for you!
+JavaPoet manages the import of the dependent classes automatically. It uses the ***Builder*** design pattern to specify the logic to generate Java code.
 
-## Git logistics
-**This is an individual homework.** Separate repositories will be created for each of your homeworks and for the course project. You will fork the repository for this homework and your fork will be **private**, no one else besides you, the TA and your course instructor will have access to your fork. Please remember to grant a read access to your repository to your TA and your instructor. In future, for the team homeworks and the course project, you should grant the write access to your forkmates, but NOT for this homework. You can commit and push your code as many times as you want. Your code will not be visible and it should not be visible to other students (except for your forkmates for a team project, but not for this homework). When you push the code into the remote repo, your instructor and the TA will see your code in your separate private fork. Making your fork public or inviting other students to join your fork for an individual homework will result in losing your grade. For grading, only the latest push timed before the deadline will be considered. **If you push after the deadline, your grade for the homework will be zero**. For more information about using the Git and Bitbucket specifically, please use this [link as the starting point](https://confluence.atlassian.com/bitbucket/bitbucket-cloud-documentation-home-221448814.html). For those of you who struggle with the Git, I recommend a book by Ryan Hodson on Ry's Git Tutorial. The other book called Pro Git is written by Scott Chacon and Ben Straub and published by Apress and it is [freely available](https://git-scm.com/book/en/v2/). There are multiple videos on youtube that go into details of the Git organization and use.
+A HelloWorld program like the one here:
 
-Please follow this naming convention while submitting your work : "Firstname_Lastname_hw2" without quotes, where you specify your first and last names **exactly as you are registered with the University system**, so that we can easily recognize your submission. I repeat, make sure that you will give both your TA and the course instructor the read/write access to your *private forked repository* so that we can leave the file feedback.txt with the explanation of the grade assigned to your homework.
+```java
+package com.example.helloworld;
 
-## Discussions and submission
-As it is mentioned above, you can post questions and replies, statements, comments, discussion, etc. on Piazza. Remember that you cannot share your code and your solutions privately, but you can ask and advise others using Piazza and StackOverflow or some other developer networks where resources and sample programs can be found on the Internet, how to resolve dependencies and configuration issues. Yet, your implementation should be your own and you cannot share it. Alternatively, you cannot copy and paste someone else's implementation and put your name on it. Your submissions will be checked for plagiarism. **Copying code from your classmates or from some sites on the Internet will result in severe academic penalties up to the termination of your enrollment in the University**. When posting question and answers on Piazza, please select the appropriate folder, i.e., hw2 to ensure that all discussion threads can be easily located.
+public final class HelloWorld {
+  public static void main(String[] args) {
+    System.out.println("Hello, JavaPoet!");
+  }
+}
+```
 
+can be generated using JavaPoet as follows:
 
-## Submission deadline and logistics
-Sunday, March 8 at 10PM CST via the bitbucket repository. Your submission will include the code for the program, your documentation with instructions and detailed explanations on how to assemble and deploy your program along with the results of your simulation and a document that explains these results based on the characteristics and the parameters of your models, and what the limitations of your implementation are. Again, do not forget, please make sure that you will give both your TAs and your instructor the read access to your private forked repository. Your name should be shown in your README.md file and other documents. Your code should compile and run from the command line using the commands **sbt clean compile test** and **sbt clean compile run** or the corresponding commands for Gradle. Also, you project should be IntelliJ friendly, i.e., your graders should be able to import your code into IntelliJ and run from there. Use .gitignore to exlude files that should not be pushed into the repo.
+```java
+MethodSpec main = MethodSpec.methodBuilder("main")
+    .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+    .returns(void.class)
+    .addParameter(String[].class, "args")
+    .addStatement("$T.out.println($S)", System.class, "Hello, JavaPoet!")
+    .build();
 
+TypeSpec helloWorld = TypeSpec.classBuilder("HelloWorld")
+    .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+    .addMethod(main)
+    .build();
 
-## Evaluation criteria
-- the maximum grade for this homework is 8% with the bonus described above. Points are subtracted from this maximum grade: for example, saying that 2% is lost if some requirement is not completed means that the resulting grade will be 8%-2% => 6%; if the core homework functionality does not work, no bonus points will be given;
-- only some POJO classes are created and nothing else is done: up to 7% lost;
-- having less than five unit and/or integration tests: up to 5% lost;
-- missing comments and explanations from the submitted program: up to 5% lost;
-- logging is not used in your programs: up to 3% lost;
-- hardcoding the input values in the source code instead of using the suggested configuration libraries: up to 4% lost;
-- no instructions in README.md on how to install and run your program: up to 5% lost;
-- the plugin crashes without completing the core functionality: up to 6% lost;
-- no design and modeling documentation exists that explains your choices: up to 6% lost;
-- the deployment documentation exists but it is insufficient to understand how you assembled and deployed all components of the program: up to 5% lost;
-- the minimum grade for this homework cannot be less than zero.
+JavaFile javaFile = JavaFile.builder("com.example.helloworld", helloWorld)
+    .build();
 
-That's it, folks!
+javaFile.writeTo(System.out);
+```
+
+`MethodSpec` "main" is configured with modifiers, return type, parameters and code statements to declare the main method. The main method is added to a `HelloWorld` class and then the class is added to a `HelloWorld.java` file.
+
+JavaPoet offers models for classes & interfaces (`TypeSpec`), fields (`FieldSpec`), methods & constructors (`MethodSpec`), parameters (`ParameterSpec`) and annotations (`AnnotationSpec`). It also generates the package folder structure for the output java source files.
+
+The most recent version of JavaPoet available as of now is 1.12.1.
+
+------
+
+#### 3. Application Design
+
+To implement Design Pattern Code Generator(DePaCoG), I have employed the **Factory Method**, **Template Method** and **Singleton** design patterns.
+
+------
+
+The **Factory Method**, a creational design pattern, creates two basic abstractions: the Product and Creator classes. Both these classes are abstract and clients need to extend them to realize their specific implementations. This pattern is used when there is a super class with multiple sub-classes and based on user input a particular sub-class needs to be instantiated. The responsibility of instantiation of a class is taken from the user to the factory class. 
+
+In the case of DePaCoG, the `DesignPattern` and `DesignPatternGenerator` are the two abstractions I have chosen.
+
+* `DesignPattern` is an `interface` which declares methods for accepting and displaying the class names & package names from the user, generating java source code of the design patterns using JavaPoet and writing the java code into java files as output.
+
+```java
+public interface DesignPattern {
+    
+    void displayClassNames(String[] classes);
+    
+    String[] setClassNames(String[] oldClasses);
+    
+    String setPackageName(String defaultPckgName);
+    
+    void createDesignPattern(String[] oldClasses, String oldPackageName);
+    
+    JavaFile[] generateCode(String[] classes, String packageName);
+    
+    void writeJavaFiles(JavaFile[] files);
+}
+```
+
+There are 23 separate concrete classes(java files) to generate the java source code for each design pattern. Each concrete class `implements DesignPattern`. Interface `DesignPattern` provides the `default` method definition of all methods except the method `generateCode()` as the implementation of all other methods do not change  according to the design patterns. Each concrete class of `DesignPattern` overrides `generateCode()`. 
+
+* `DesignPatternGenerator` is an `abstract class` which declares methods to display a menu of all available design patterns and invoking appropriate classes to generate a  user selected design pattern.
+
+```java
+abstract class DesignPatternGenerator {
+
+    protected  String[] designPatterns;
+
+    abstract void displayDesignPatterns();
+
+    abstract void generateDesignPattern();
+
+    abstract void designPatternFactory();
+}
+```
+
+The field `designPatterns` declares all the design patterns available for creation. All the methods are abstract and are provided with the implementation in the concrete class `Hw1DesignPatternGenerator` which `extends DesignPatternGenerator.` The class `Hw1DesignPatternGenerator` also defines an additional method `chooseDesignPattern(int choice)` which takes in user’s choice of design pattern as input and instantiates an anonymous object of the appropriate design pattern class.
+
+* Advantages of using Factory Method pattern:
+  * It provides an approach to “program to an interface, not an implementation”.
+  * Through inheritance it provides an abstraction between implementation and client classes. It removes the instantiation of objects of implementation classes from the user/client code
+  * It makes the code more robust, easy to extend and less coupled
+  * New types of concrete products can be introduced without any modifications to the existing client code
+* Disadvantages of using Factory Method pattern:
+  * For just creating a single instance of a particular concrete object the user might have to sub-class the creator, which complicates the hierarchy of creator classes
+  * Makes the code difficult to interpret as all code is behind an abstraction that may also be hiding another set of abstractions
+
+------
+
+The **Template Method**, a behavioral design pattern, is used to create method stub and defer the steps of implementation to the subclasses. 
+
+The algorithm for generating design patterns has the following steps: display list of all design patterns, ask user which design pattern code is to be generated, ask for and set custom (or default) class names & package name, generate source file using JavaPoet and finally write into output files. The order of execution of these steps cannot be altered as the sequence is critical for the execution of the program. So here different methods are used to achieve the goal of generating the design pattern code. Steps like asking class names& package name and writing generated code into file are common for any design pattern whether it is a creational or structural design pattern. 
+
+This is where Template Method design pattern is useful. It helps define the basic steps to execute an algorithm and can provide default implementation of the methods that might be common for all or a majority of the sub-classes implementing the design pattern. The method is which defines an exclusive property of a design pattern can be overridden by the sub-class.
+
+Template Method is implemented in the `interface DesignPattern` and its sub-classes. Interface `DesignPattern` provides the `default` method definition of all methods except the method `generateCode()` as the implementation of all other methods do not change  according to the design patterns. Each concrete class of `DesignPattern` overrides `generateCode()`.
+
+Inside the `interface DesignPattern`:
+
+```java
+JavaFile[] generateCode(String[] classes, String packageName);
+```
+
+Inside `class Singleton` which implements `DesignPattern`:
+
+```java
+public JavaFile[] generateCode(String[] classes, String packageName){
+        int i = 0;
+        ClassName Singleton = ClassName.get("", classes[i]);
+        MethodSpec constructor = MethodSpec.constructorBuilder()
+                .addModifiers(Modifier.PRIVATE)
+                .build();
+        FieldSpec instance = FieldSpec.builder(Singleton, "INSTANCE")
+                .addModifiers(Modifier.PRIVATE, Modifier.STATIC)
+                .build();
+        MethodSpec getInstance = MethodSpec.methodBuilder("getInstance")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .returns(Singleton)
+                .beginControlFlow("if ($N == null)", instance.name)
+                .addStatement("$N = new $T()",instance.name, Singleton)
+                .endControlFlow()
+                .addStatement("return $N", instance.name)
+                .build();
+        TypeSpec singleton = TypeSpec.classBuilder(Singleton)
+                .addModifiers(Modifier.PUBLIC)
+                .addField(instance)
+                .addMethod(constructor)
+                .addMethod(getInstance)
+                .build();
+        generatedCode[i] = JavaFile.builder(packageName, singleton)
+                .skipJavaLangImports(true)
+                .build();
+        return generatedCode;
+    }
+```
+
+* Advantages of using Template Method pattern:
+  * All the duplicate code/methods of sub-classes can be put together in the super-class
+  * Client can override only certain methods of a large algorithm, so that the other components of the algorithm are not affected  
+* Disadvantages of using Template Method pattern:
+  * Sometimes client might have to change certain fundamental aspects of the algorithm and changing only certain fixed components of the algorithm might not suffice
+  * If the number of components in the algorithm being modelled is large, it is harder to maintain the code
+
+------
+
+The **Singleton**, a creational design pattern, that helps in ensuring that a class has only one instance in a program while also providing a global access point to the instance. I have used Singleton to instantiate only one instance of the class `Hw1DesignPatternGenerator` so that in the client class `DePaCoG` the design pattern generating method is only called once at a time. The `instance` field in `Hw1DesignPatternGenerator` is lazy initialized.
+
+Inside class `Hw1DesignPatternGenerator`:
+
+```java
+private static Hw1DesignPatternGenerator instance;
+
+private Hw1DesignPatternGenerator(){
+    logger.info("Executing constructor Hw1DesignPatternGenerator()");
+    generateDesignPattern();
+}
+
+public static Hw1DesignPatternGenerator getInstance(){
+        if (instance == null) {
+            instance = new Hw1DesignPatternGenerator();
+        }
+        return instance;
+    }
+```
+
+Creating instance inside `DePaCoG` class:
+
+```java
+public class DePaCoG {
+    public static void main(String[] args){
+        
+        Hw1DesignPatternGenerator.getInstance();
+    }
+}
+```
+
+* Advantages of using Singleton pattern:
+  * It makes sure that a single instance is instantiated for a class
+  * Helps to get a global access point to the instance
+  * The object is only initialized when initially requested    
+* Disadvantages of using Singleton pattern:
+  * Sometimes singleton pattern can hide bad code design
+  * It requires modifications to be used in a multi threaded environment to make sure multiple instances are not created by multiple threads
+
+------
+
+The image below shows a class diagram for the complete application. For simplicity I have selected only 3 design pattern classes (each representing its category of design patterns) out of the 23.
+
+------
+
+#### 4. Test Cases
+
+There are 3 test classes `ChooseDesignPatternTest`, `DesignPatternTest` and `Hw1DesignPatternGeneratorTest`, with a total of 7 test cases.
+
+* Test Case to verify appropriate hashmap is created for the design patterns  
+* Test case to check correct design pattern key is returned for a selected design pattern from the hashmap
+* Test Case to verify only 1 instance of `Hw1DesignPatternGenerator` is created each time.
+* Test Case to verify correct design pattern file is executed when user inputs the choice of design pattern.
+* Test Case to check null is returned on selecting incorrect design pattern choice.
+* Test Case to verify  `generateCode()` returns `JavaFile[]` object
+* Test Case to verify the generated java files are written successfully in the output folder.
+
+------
+
+#### 5. Instructions to Execute
+
+First clone the repository from Bitbucket.
+
+Open and load the project as an IntelliJ IDEA project and press `Ctrl` twice to open the Run Anything window. Perform the tasks `gradle clean test` and `gradle clean build`. To execute the project, open Gradle tool window and select `Tasks` -> `intellij` -> `runIde` or perform `gradle runIde` in the Run Anything window.
+
+Wait for a new instance of IntelliJ IDEA Community to open and create a new or open an existing Java project to test the plugin. 
+
+The plugin can be used via the Menu option `Design Pattern Generator`, located on the right end of the Main Menu bar. Select `Design Pattern Generator` -> `Choose Design Pattern`.A new window is created within the IDE with a dropdown option to select the output design pattern. After selecting a design pattern and clicking on `Proceed`, a new window is created to get user input for package name and class names of the output class files. Default values have been provided in the text fields which can be overwritten by user input. If a text field is left blank(without any text) it will cause an exception. After user is satisfied with the input values, press `OK` and the design pattern template files are created in the root directory of the project, under a folder with name as the package name. 
+
+A `default.conf` configuration file is present at `src/main/resources`. 
+
+------
+
+#### 6. Results of Execution
+
+Here is an example of config values to create Abstract Factory design pattern.
+
+```
+{
+      designPatternChoice = "2"       //for Abstract Factory Method design pattern
+      classes = ["Processor", "Intel", "AMD",
+      "OperatingSystem", "OS", "ChromeOS", "Ubuntu",
+      "LaptopFactory", "ChromeBookFactory","LinuxLaptopFactory"]
+      packageName = "com.laptopAbstractFacty"
+}
+```
+
+For above config input, the output files will be saved in the folder `com.laptopAbstractFactory` in the root directory of the loaded IntelliJ project.
+
+The classes created are : `Processor.java, Intel.java, AMD.java, OperatingSystem.java, OS.java, ChromeOS.java, Ubuntu.java, LaptopFactory.java, ChromeBookFactory.java,LinuxLaptopFactory.java`
+
+The image below shows the class diagram of the classes generated after executing the input values.
+
