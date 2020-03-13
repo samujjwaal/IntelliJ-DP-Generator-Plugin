@@ -46,9 +46,9 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
             "Chain of Responsibility","Command","Interpreter","Iterator","Mediator","Memento","Observer","State","Strategy","Visitor","Template Method"};
 
 //    declare HashMap object
-    static HashMap<Integer, String> designPatternsHashMap = new HashMap<Integer, String>();
+    protected HashMap<Integer, String> designPatternsHashMap = new HashMap<Integer, String>();
 
-    private void createHashMap(String[] patternList){
+    protected void createHashMap(String[] patternList){
         logger.info("Creating hashmap of design patterns");
 
         HashMap<Integer, String> dpHashMap = new HashMap<Integer, String>();
@@ -60,7 +60,7 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
         }
     }
 
-    private int getDesignPatternKey(String value){
+    protected int getDesignPatternKey(String value){
         logger.info("Retrieve design pattern choice from hashmap ");
 
         // By default, returns singleton as choice
@@ -84,6 +84,9 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
 
         // create a object
         ChooseDesignPattern dp = new ChooseDesignPattern();
+
+//        Config paramsConfig = ConfigFactory.parseFile(new File("C:\\Users\\Samujjwaal Dey\\Desktop\\CS 474 OOLE\\Homeworks\\homework2\\src\\main\\resources\\default.conf"));
+//        Config[] iterations = paramsConfig.getConfigList("iterations").toArray(new Config[0]);
 
         // set layout of frame
         f.setLayout(new FlowLayout());
@@ -129,6 +132,7 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
                     // Get choice from dropdown
                     String choice = Objects.requireNonNull(dropdown.getSelectedItem()).toString().replaceAll("\\s+","").toLowerCase();
                     int designPatternChoice = getDesignPatternKey(choice);
+
                     DesignPattern outputDesignPattern = hw2.chooseDesignPattern(designPatternChoice,0);
 
                     String[] classNames = outputDesignPattern.getDefaultClassName();
@@ -136,7 +140,7 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
 
                     logger.info("Creating object of {}", DPDialogWrapper.class.getSimpleName());
                     DPDialogWrapper dpWrapper = new DPDialogWrapper(outputDesignPattern,classNames,packageName,event);
-                    
+
                     if(dpWrapper.showAndGet()){
                         dpWrapper.doOKAction();
                     }

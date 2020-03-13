@@ -63,7 +63,7 @@ public class DPDialogWrapper extends DialogWrapper {
         super(true);  // use the current window as parent
         setParams(dp,defaultClasses,defaultPackageName,e);
         init();
-        setTitle("Test DialogWrapper");
+        setTitle("Input Values");
     }
 
     @Nullable
@@ -127,7 +127,7 @@ public class DPDialogWrapper extends DialogWrapper {
             inputClassname[i] = classNamesTextField[i].getText();
         }
 
-        // to close panel
+        // for closing panel
         dispose();
 
         // generating JavaFile of each design pattern class
