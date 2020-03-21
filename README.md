@@ -253,7 +253,34 @@ public class DePaCoG {
 
 ------
 
-The image below shows a class diagram for the complete application. For simplicity I have selected only 3 design pattern classes (each representing its category of design patterns) out of the 23.
+Actions of the plugin are added in the `plugin.xml` file as shown below:
+
+```xml
+<actions>
+    <!-- Add your actions here -->
+
+    <group id="DesignPattern.Generator.MainMenu" text="Design Pattern Generator"
+           description="Design pattern generator">
+        <add-to-group group-id="MainMenu" anchor="last"/>
+        <action class="com.samujjwaal.designpatternplugin.GetUserInput" id="Get.User.Input"
+                text="Choose Design Pattern" />
+        <separator/>
+        <action class="com.samujjwaal.designpatternplugin.OpenGitHub" id="GitHub.Actions.OpenProject"
+                text="Open GitHub Project"/>
+    </group>
+
+</actions>
+```
+
+The class `GetUserInput` is used to initiate the plugin execution and `extends AnAction`. It overrides the method `actionPerformed`, which is invoked whenever the user performs the  associated plugin action.
+
+The class `ChooseDesignPattern` is used to create a `JFrame` with a `ComboBox` element(dropdown menu) to select a design pattern. The class `extends JFrame` and `implements ItemListener`.
+
+Once the design pattern is selected, the respective design pattern generating class from `hw1ProjectFiles` is instantiated and a `DialogWrapper` class is also instantiated.
+
+The class `DPDialogWrapper` is used to create a dialog window for the user to input appropriate class names and package names for the output design pattern files. It `extends DialogWrapper` class. 
+
+A `PsiFile` is created for each generated output class file using `PsiFileFactory` and `PsiDirectory` is used to set the directory of the output files.  Each `PsiFile` is written into the root directory using `runWriteCommandAction()` method of `WriteCommandAction` class.
 
 ------
 
@@ -279,9 +306,35 @@ Open and load the project as an IntelliJ IDEA project and press `Ctrl` twice to 
 
 Wait for a new instance of IntelliJ IDEA Community to open and create a new or open an existing Java project to test the plugin. 
 
-The plugin can be used via the Menu option `Design Pattern Generator`, located on the right end of the Main Menu bar. Select `Design Pattern Generator` -> `Choose Design Pattern`.A new window is created within the IDE with a dropdown option to select the output design pattern. After selecting a design pattern and clicking on `Proceed`, a new window is created to get user input for package name and class names of the output class files. Default values have been provided in the text fields which can be overwritten by user input. If a text field is left blank(without any text) it will cause an exception. After user is satisfied with the input values, press `OK` and the design pattern template files are created in the root directory of the project, under a folder with name as the package name. 
+The plugin can be used via the Menu option `Design Pattern Generator`, located on the right end of the Main Menu bar.
+
+![](https://bitbucket.org/samujjwaal/homework2/raw/master/screenshots/hw2/MainMenu.png)
+
+Select `Design Pattern Generator` -> `Choose Design Pattern`.A new window is created within the IDE with a dropdown option to select the output design pattern.
+
+![](https://bitbucket.org/samujjwaal/homework2/raw/master/screenshots/hw2/Dropdown1.png)
+
+By default Singleton design pattern is selected and will remain selected even when user presses `Proceed` without making a new selection from the dropdown.
+
+![](https://bitbucket.org/samujjwaal/homework2/raw/master/screenshots/hw2/Dropdown2.png)
+
+After selecting a design pattern and clicking on `Proceed`, a new window is created to get user input for package name and class names of the output class files.
+
+![](https://bitbucket.org/samujjwaal/homework2/raw/master/screenshots/hw2/Dialog1.png)
+
+Default values have been provided in the text fields which can be overwritten by user input. If a text field is left blank(without any text) it will cause an exception. 
+
+![](https://bitbucket.org/samujjwaal/homework2/raw/master/screenshots/hw2/Dialog2.png)
+
+After user is satisfied with the input values, press `OK` and the design pattern template files are created in the root directory of the project, under a folder with name as the package name. 
+
+![](https://bitbucket.org/samujjwaal/homework2/raw/master/screenshots/hw2/OutputDir.png)
 
 A `default.conf` configuration file is present at `src/main/resources`. 
+
+If user selects `Design Pattern Generator` -> `Open GitHub Project`, then the GitHub repository of the Design Pattern Code Generator from HW1 is opened in the browser.
+
+![](https://bitbucket.org/samujjwaal/homework2/raw/master/screenshots/hw2/github.png)
 
 ------
 
@@ -293,9 +346,9 @@ Here is an example of config values to create Abstract Factory design pattern.
 {
       designPatternChoice = "2"       //for Abstract Factory Method design pattern
       classes = ["Processor", "Intel", "AMD",
-      "OperatingSystem", "OS", "ChromeOS", "Ubuntu",
+      "OperatingSystem", "ChromeOS", "Ubuntu",
       "LaptopFactory", "ChromeBookFactory","LinuxLaptopFactory"]
-      packageName = "com.laptopAbstractFacty"
+      packageName = "com.laptopAbstractFactory"
 }
 ```
 
@@ -305,3 +358,4 @@ The classes created are : `Processor.java, Intel.java, AMD.java, OperatingSystem
 
 The image below shows the class diagram of the classes generated after executing the input values.
 
+![](https://bitbucket.org/samujjwaal/homework2/raw/master/screenshots/hw2/ClassDiagram.png)
