@@ -3,6 +3,8 @@ package com.samujjwaal.hw1ProjectFiles;
 import com.squareup.javapoet.JavaFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.lang.model.SourceVersion;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
@@ -22,6 +24,12 @@ public interface DesignPattern {
 
     String getDefaultPackageName();
     String[] getDefaultClassName();
+
+    // to check if input class names are valid
+    static boolean validateInput(String str){
+        return SourceVersion.isIdentifier(str) && !SourceVersion.isKeyword(str);
+    }
+
     // to set custom class names from user input
     default String[] setClassNames(String[] oldClasses){
 
@@ -42,7 +50,7 @@ public interface DesignPattern {
                         // get class names from user
                         newClasses[i] = sc.next();
                         // checking if classname starts with a letter or not
-                        check = Character.isAlphabetic(newClasses[i].toLowerCase().charAt(0));
+                        check = validateInput(newClasses[i]);
                         logger.info("Checking if classname entered is valid");
                         if(!check){
                             logger.error("Invalid classname");

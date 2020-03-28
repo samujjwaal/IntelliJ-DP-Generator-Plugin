@@ -1,6 +1,6 @@
 package com.samujjwaal.designpatternplugin;
 
-import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.ComboBox;
 import com.intellij.ui.JBColor;
 import com.samujjwaal.hw1ProjectFiles.DesignPattern;
@@ -19,8 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 
 public class ChooseDesignPattern extends JFrame implements ItemListener{
 
@@ -40,11 +38,11 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
     static JPanel p;
 
     // Buttons for the frame
-    static JButton proceedButton;
+    static JButton nextButton;
     static JButton cancelButton;
 
     // array of string containing design patterns
-    String[] designPatterns = {"Singleton","Abstract Factory","Builder","Factory Method","Prototype",
+    String[] designPatterns = {"","Singleton","Abstract Factory","Builder","Factory Method","Prototype",
             "Adapter","Bridge","Composite","Decorator","Facade","Flyweight","Proxy",
             "Chain of Responsibility","Command","Interpreter","Iterator","Mediator","Memento","Observer","State","Strategy","Visitor","Template Method"};
 
@@ -54,12 +52,11 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
     protected void createHashMap(String[] patternList){
         logger.info("Creating hashmap of design patterns");
 
-        HashMap<Integer, String> dpHashMap = new HashMap<Integer, String>();
         for(int i =0; i<patternList.length; i++){
 
             //removing spaces and converting to lower case
             String value = patternList[i].replaceAll("\\s+","").toLowerCase();
-            designPatternsHashMap.put(i + 1, value );
+            designPatternsHashMap.put(i, value );
         }
     }
 
@@ -78,12 +75,10 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
         return key;
     }
 
-//    String choice = designPatterns[0].replaceAll("\\s+","").toLowerCase() ;
-
-    public void createDropdown(AnActionEvent event){
+    public void createDropdown(Project project){
 
         // create a new frame
-        f = new JFrame("Choose Design Pattern");
+        f = new JFrame("Choose a Design Pattern");
 
         // create a object
         ChooseDesignPattern dp = new ChooseDesignPattern();
@@ -103,8 +98,8 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
         createHashMap(designPatterns);
 
         // create labels
-        l = new JLabel("Select the Design Pattern ");
-        l1 = new JLabel(String.format("%s selected by default", designPatterns[0]));
+        l = new JLabel("Select a Design Pattern");
+        l1 = new JLabel("No design pattern selected");
         l1.setForeground(JBColor.GRAY);
 
         // create a new panel
@@ -121,10 +116,14 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
         // add the panel to frame
         f.add(p);
 
-        proceedButton = new JButton("Proceed");
+        nextButton = new JButton("Next");
+
+        // Proceed button disabled as no design pattern is chosen
+        nextButton.setEnabled(false);
+        nextButton.setToolTipText("Please select a Design Pattern!");
 
         // action for Proceed button
-        proceedButton.addActionListener(new ActionListener() {
+        nextButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 f.dispose();
@@ -133,8 +132,10 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
                 DesignPatternGenerator hw2 = DesignPatternGenerator.getInstance();
                 try {
                     // Get choice from dropdown
-                    String choice = Objects.requireNonNull(dropdown.getSelectedItem()).toString().replaceAll("\\s+","").toLowerCase();
-                    int designPatternChoice = getDesignPatternKey(choice);
+//                    String choice = Objects.requireNonNull(dropdown.getSelectedItem()).toString().replaceAll("\\s+","").toLowerCase();
+//                           int designPatternChoice = getDesignPatternKey(choice);
+
+                    int designPatternChoice = dropdown.getSelectedIndex();
 
                     DesignPattern outputDesignPattern = hw2.chooseDesignPattern(designPatternChoice,0);
 
@@ -142,7 +143,7 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
                     String packageName = outputDesignPattern.getDefaultPackageName();
 
                     logger.info("Creating object of {}", DPDialogWrapper.class.getSimpleName());
-                    DPDialogWrapper dpWrapper = new DPDialogWrapper(outputDesignPattern,classNames,packageName,event);
+                    DPDialogWrapper dpWrapper = new DPDialogWrapper(outputDesignPattern,classNames,packageName,project,designPatterns[designPatternChoice]);
 
                     if(dpWrapper.showAndGet()){
                         dpWrapper.doOKAction();
@@ -162,7 +163,7 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
             }
         });
 
-        f.add(proceedButton);
+        f.add(nextButton);
         f.add(cancelButton);
 
         f.setSize(new Dimension(500,130));
@@ -187,6 +188,10 @@ public class ChooseDesignPattern extends JFrame implements ItemListener{
             logger.info("{} design pattern chosen",choice);
             l1.setText(choice + " selected");
             l1.setForeground(JBColor.black);
+
+            // enable Proceed button as design pattern is now chosen
+            nextButton.setEnabled(true);
+            nextButton.setToolTipText("Proceed with " + choice);
         }
     }
 
