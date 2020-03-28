@@ -112,7 +112,4 @@ gradle-app.setting
 # Custom exclusions
 
 outputs/
-target/streams
-project/project
-project/target
 screenshots
