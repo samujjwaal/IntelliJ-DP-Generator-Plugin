@@ -1,21 +1,24 @@
-## Object-oriented design and implementation of an IntelliJ plugin for a Design Pattern Code Generator.
+# IntelliJ plugin for a Design Pattern Code Generator
 
-This project is the implementation of a program to create an IntelliJ IDEA plugin  that generates the template code for a user chosen design pattern and adds it to the existing Java project opened and loaded in IntelliJ IDE. The Design Patterns covered are the 23 Gang of Four(GoF) design patterns, as presented in the book “Design Patterns: Elements of Reusable Object-Oriented Software”. 
+This project is to create an IntelliJ IDEA plugin that generates the template code for a user chosen design pattern and adds it to the existing Java project opened and loaded in the IntelliJ IDE. 
+Additionally, the plugin also checks whether the class/interface names provided clash with any pre-existing type names in the project directory.
 
-------
+The Design Patterns covered are the 23 Gang of Four(GoF) design patterns, as presented in the book “Design Patterns: Elements of Reusable Object-Oriented Software”. 
+
+The implementation for code generation module was taken from [this project](https://github.com/samujjwaal/Design-Pattern-Code-Generator).
 
 ## Index
 
-1. About Design Patterns
-2. About JavaPoet
-3. Application Design
-4. Test Cases
-5. Instructions to Execute
-6. Results of Execution
+1. [About Design Patterns](#1-about-design-patterns)
+2. [About JavaPoet](#2-about-javapoet)
+3. [Application Design](#3-application-design)
+4. [Test Cases](#4-test-cases)
+5. I[nstructions to Execute](#5-instructions-to-execute)
+6. [Results of Execution](#6-results-of-execution)
 
 ------
 
-#### 1. About Design Patterns
+### 1. About Design Patterns
 
 Design patterns are the best practices that a programmer can employ to solve trivial problems while designing an application. Design patterns help in speeding up the development process as they provide a set of time tested, proven development paradigms. They provide an industry standard approach to solve a recurring problem. Using design patterns promotes reusability that leads to more robust and highly maintainable code.
 
@@ -48,9 +51,7 @@ The 23 Design Patterns are classified into 3 main categories:
   * Template
   * Visitor
 
-------
-
-#### 2. About JavaPoet
+### 2. About JavaPoet
 
 [JavaPoet](https://github.com/square/javapoet), a successor to [JavaWriter](https://github.com/square/javapoet/tree/javawriter_2), is a Java API for generating .java source files. It can generate primitive types, reference types (like classes, interfaces, enumerated types, anonymous inner classes), fields, methods, parameters, annotations, and Javadocs. 
 
@@ -95,13 +96,10 @@ JavaPoet offers models for classes & interfaces (`TypeSpec`), fields (`FieldSpec
 
 The most recent version of JavaPoet available as of now is 1.12.1.
 
-------
-
 #### 3. Application Design
 
 To implement Design Pattern Code Generator(DePaCoG), I have employed the **Factory Method**, **Template Method** and **Singleton** design patterns.
 
-------
 
 The **Factory Method**, a creational design pattern, creates two basic abstractions: the Product and Creator classes. Both these classes are abstract and clients need to extend them to realize their specific implementations. This pattern is used when there is a super class with multiple sub-classes and based on user input a particular sub-class needs to be instantiated. The responsibility of instantiation of a class is taken from the user to the factory class. 
 
@@ -280,11 +278,17 @@ Once the design pattern is selected, the respective design pattern generating cl
 
 The class `DPDialogWrapper` is used to create a dialog window for the user to input appropriate class names and package names for the output design pattern files. It `extends DialogWrapper` class. 
 
-A `PsiFile` is created for each generated output class file using `PsiFileFactory` and `PsiDirectory` is used to set the directory of the output files.  Each `PsiFile` is written into the root directory using `runWriteCommandAction()` method of `WriteCommandAction` class.
+Method `doValidate` is used to validate the input in each text field. It returns a ValidationInfo object for a particular JComponent which fails validation. Every time the `Ok` button is pressed method `doValidate` is invoked. 
 
-------
+The class `OutputFileHandler ` is used to perform all file management and I/O operations of the plugin. `PsiDirectory` objects are used to retrieve the project root directory and set the output directory for the generated files. 
 
-#### 4. Test Cases
+Method `createOutputPackageDir` takes package name as input and is invoked to create the output directory. 
+
+Method `checkClassNameClash` takes a class name as input and is invoked to check if any class file with the given name already exists or not. The method returns a Boolean value.
+
+A `PsiFile` is created for each generated output class file using `PsiFileFactory`.  Each `PsiFile` is written into the root directory using `runWriteCommandAction()` method of `WriteCommandAction` class.
+
+### 4. Test Cases
 
 There are 3 test classes `ChooseDesignPatternTest`, `DesignPatternTest` and `Hw1DesignPatternGeneratorTest`, with a total of 7 test cases.
 
@@ -296,49 +300,57 @@ There are 3 test classes `ChooseDesignPatternTest`, `DesignPatternTest` and `Hw1
 * Test Case to verify  `generateCode()` returns `JavaFile[]` object
 * Test Case to verify the generated java files are written successfully in the output folder.
 
-------
+### 5. Instructions to Execute
 
-#### 5. Instructions to Execute
-
-First clone the repository from Bitbucket.
+First clone the repository from GitHub.
 
 Open and load the project as an IntelliJ IDEA project and press `Ctrl` twice to open the Run Anything window. Perform the tasks `gradle clean test` and `gradle clean build`. To execute the project, open Gradle tool window and select `Tasks` -> `intellij` -> `runIde` or perform `gradle runIde` in the Run Anything window.
 
 Wait for a new instance of IntelliJ IDEA Community to open and create a new or open an existing Java project to test the plugin. 
 
+Alternatively on Windows the plugin can be executed by executing `gradlew.bat runIde` in the command line.
+
 The plugin can be used via the Menu option `Design Pattern Generator`, located on the right end of the Main Menu bar.
 
-![](https://bitbucket.org/samujjwaal/homework2/raw/master/screenshots/hw2/MainMenu.png)
+<img src="screenshots/MainMenu.png" style="zoom:75%;" />
 
 Select `Design Pattern Generator` -> `Choose Design Pattern`.A new window is created within the IDE with a dropdown option to select the output design pattern.
 
-![](https://bitbucket.org/samujjwaal/homework2/raw/master/screenshots/hw2/Dropdown1.png)
+<img src="screenshots/Dropdown1.png" style="zoom:75%;" />
 
 By default Singleton design pattern is selected and will remain selected even when user presses `Proceed` without making a new selection from the dropdown.
 
-![](https://bitbucket.org/samujjwaal/homework2/raw/master/screenshots/hw2/Dropdown2.png)
+<img src="screenshots/Dropdown2.png" style="zoom:75%;" />
 
 After selecting a design pattern and clicking on `Proceed`, a new window is created to get user input for package name and class names of the output class files.
 
-![](https://bitbucket.org/samujjwaal/homework2/raw/master/screenshots/hw2/Dialog1.png)
+<img src="screenshots/Dialog1.png" style="zoom:75%;" />
 
 Default values have been provided in the text fields which can be overwritten by user input. If a text field is left blank(without any text) it will cause an exception. 
 
-![](https://bitbucket.org/samujjwaal/homework2/raw/master/screenshots/hw2/Dialog2.png)
+<img src="screenshots/Dialog2.png" style="zoom:75%;" />
+
+If the user leaves the text field empty or inputs invalid class name then a validation info is showed beside the text field.
+
+<img src="screenshots/DialogVal1.png" style="zoom:75%;" />
+
+<img src="screenshots/DialogVal2.png" style="zoom:75%;" />
+
+On clicking Finish if the class names given as input clash with existing class names in the output directory, then a message dialog is displayed and the clashing class names are highlighted in red. On again clicking Finish, if the name clash persists the message dialog is again shown otherwise the corresponding class files are generated.
+
+<img src="screenshots/NameClash.png" style="zoom:75%;" />
 
 After user is satisfied with the input values, press `OK` and the design pattern template files are created in the root directory of the project, under a folder with name as the package name. 
 
-![](https://bitbucket.org/samujjwaal/homework2/raw/master/screenshots/hw2/OutputDir.png)
+<img src="screenshots/OutputDir.png" style="zoom:75%;" />
 
 A `default.conf` configuration file is present at `src/main/resources`. 
 
 If user selects `Design Pattern Generator` -> `Open GitHub Project`, then the GitHub repository of the Design Pattern Code Generator from HW1 is opened in the browser.
 
-![](https://bitbucket.org/samujjwaal/homework2/raw/master/screenshots/hw2/github.png)
+![](screenshots/github.png)
 
-------
-
-#### 6. Results of Execution
+### 6. Results of Execution
 
 Here is an example of config values to create Abstract Factory design pattern.
 
@@ -358,4 +370,4 @@ The classes created are : `Processor.java, Intel.java, AMD.java, OperatingSystem
 
 The image below shows the class diagram of the classes generated after executing the input values.
 
-![](https://bitbucket.org/samujjwaal/homework2/raw/master/screenshots/hw2/ClassDiagram.png)
+![](screenshots/ClassDiagram.png)
