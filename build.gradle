@@ -17,7 +17,7 @@ dependencies {
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.6.0'
 
     // https://mvnrepository.com/artifact/com.squareup/javapoet
-    compile group: 'com.squareup', name: 'javapoet', version: '1.12.1'
+    compile group: 'com.squareup', name: 'javapoet', version: '1.13.0'
 
     // https://mvnrepository.com/artifact/com.typesafe/config
     compile group: 'com.typesafe', name: 'config', version: '1.4.0'
